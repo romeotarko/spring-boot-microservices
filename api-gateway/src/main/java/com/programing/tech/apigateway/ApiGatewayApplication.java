@@ -1,4 +1,4 @@
-package programing.texh.apigateway;
+package com.programing.tech.apigateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
