@@ -1,5 +1,4 @@
 package com.programmingtech.productservice;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.programmingtech.productservice.dto.ProductRequest;
 import com.programmingtech.productservice.repository.ProductRepository;
@@ -58,5 +57,22 @@ class ProductServiceApplicationTests {
                 .description("iphone 14")
                 .price(BigDecimal.valueOf(1600)).build();
     }
+    @Test
+    void shouldGetAllProducts() throws Exception {
+     mockMvc.perform(MockMvcRequestBuilders.get("/api/product")
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andReturn();
+        Assertions.assertNotNull(productRepository.findAll());
+    }
 
+    @Test
+    void shouldFailToGetAllProducts() throws Exception {
+        productRepository.deleteAll();
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/product")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        Assertions.assertEquals(0,productRepository.findAll().size());
+    }
 }
