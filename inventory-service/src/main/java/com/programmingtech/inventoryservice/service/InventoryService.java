@@ -1,6 +1,7 @@
 package com.programmingtech.inventoryservice.service;
 
 import com.programmingtech.inventoryservice.dto.InventoryResponse;
+import com.programmingtech.inventoryservice.model.Inventory;
 import com.programmingtech.inventoryservice.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,9 @@ public class InventoryService {
 
     @Transactional(readOnly = true)
     public List<InventoryResponse> isInStock(List<String> skuCode){
-        return inventoryRepository.findBySkuCodeIn(skuCode).stream()
+        List<Inventory> inventoryList = inventoryRepository.findAll();
+
+        return inventoryList.stream()
                 .map(inventory ->
                     InventoryResponse.builder()
                             .skuCode(inventory.getSkuCode())
