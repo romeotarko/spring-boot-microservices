@@ -38,6 +38,7 @@ public class OrderService {
                 .block();
 
 
+        assert inventoryResponseArray != null;
         boolean  allProductsInStock = Arrays.stream(inventoryResponseArray).allMatch(InventoryResponse::isInStock);
 
        if (allProductsInStock){
