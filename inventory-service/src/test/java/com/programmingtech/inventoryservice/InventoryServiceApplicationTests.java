@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
-class InventoryServiceApplicationTests {
+class InventoryServiceApplicationTests extends Assertions{
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -47,7 +47,7 @@ class InventoryServiceApplicationTests {
 				.andExpect(status().isOk())
 				.andReturn();
 
-		Assertions.assertNotNull(result);
+		assertNotNull(result);
 	}
 
 	@Test
@@ -58,6 +58,6 @@ class InventoryServiceApplicationTests {
 				.andExpect(status().isOk())
 				.andReturn();
 
-		Assertions.assertEquals(0,inventoryRepository.findAll().size());
+		assertEquals(0,inventoryRepository.findAll().size());
 	}
 }

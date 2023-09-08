@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
-class ProductServiceApplicationTests {
+class ProductServiceApplicationTests extends Assertions{
 
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.4.2");
@@ -48,7 +48,7 @@ class ProductServiceApplicationTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/product")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(productRequestString)).andExpect(status().isCreated());
-        Assertions.assertEquals(1, productRepository.findAll().size());
+        assertEquals(1, productRepository.findAll().size());
     }
 
     private ProductRequest getProductRequest() {
@@ -63,7 +63,7 @@ class ProductServiceApplicationTests {
                         .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andReturn();
-        Assertions.assertNotNull(productRepository.findAll());
+        assertNotNull(productRepository.findAll());
     }
 
     @Test
@@ -73,6 +73,6 @@ class ProductServiceApplicationTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        Assertions.assertEquals(0,productRepository.findAll().size());
+        assertEquals(0,productRepository.findAll().size());
     }
 }
