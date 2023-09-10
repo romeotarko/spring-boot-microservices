@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,9 +31,17 @@ public class OrderService {
 
         order.setOrderLineItemsList(orderLineItems);
 
-        List<String> skuCodes = order.getOrderLineItemsList().stream().map(OrderLineItems::getScuCode).toList();
+        List<String> skuCodes = order.getOrderLineItemsList().stream().map(OrderLineItems::getSkuCode).toList();
         // Call Inventory service and place order if product is in stock
-       InventoryResponse[] inventoryResponseArray = webClientBuilder.build().get().uri("http://inventory-service/api/inventory",uriBuilder -> uriBuilder.queryParam("skuCode",skuCodes).build())
+        InventoryResponse[] inventoryResponseArray = webClientBuilder.build()
+                .get()
+                .uri(uriBuilder -> {
+                    UriBuilder updatedUriBuilder = uriBuilder.path("http://inventory-service/api/inventory");
+                    for (String skuCode : skuCodes) {
+                        updatedUriBuilder.queryParam("skuCode", skuCode);
+                    }
+                    return updatedUriBuilder.build();
+                })
                 .retrieve()
                 .bodyToMono(InventoryResponse[].class)
                 .block();
@@ -53,7 +62,7 @@ public class OrderService {
         OrderLineItems orderLineItems = new OrderLineItems();
         orderLineItems.setPrice(orderLineItemsDto.getPrice());
         orderLineItems.setQuantity(orderLineItemsDto.getQuantity());
-        orderLineItems.setScuCode(orderLineItemsDto.getScuCode());
+        orderLineItems.setSkuCode(orderLineItemsDto.getSkuCode());
         return orderLineItems;
     }
 }
